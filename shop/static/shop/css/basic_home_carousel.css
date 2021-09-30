@@ -1,0 +1,13 @@
+/* Carousel Home Section */
+.carousel-item img{
+   height:32rem !important; 
+}
+
+.indicator_clr li{
+    background-color:grey;
+}
+
+.control_clr{
+    background-color:black;
+}
+

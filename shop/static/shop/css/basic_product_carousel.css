@@ -1,0 +1,34 @@
+/* Carousel Product Section */
+#wasted .col-md-3{
+     display:inline-flex !important; 
+     margin-left: -4px !important; 
+}
+
+#wasted .carousel-indicators .active{
+    background-color:grey !important;
+}
+
+#wasted .carousel-item div{ 
+ position: relative !important;
+}
+
+ 
+#wasted .wow img{
+    width:15rem !important;
+    height:10rem !important;
+}
+#wasted .carousel-indicator li{
+    background-color:grey !important;
+}
+#wasted .carousel-indicators{
+    bottom: 0 !important;
+    }
+#wasted .carousel-control-prev-icon,
+#wasted .carousel-control-next-icon{
+    background-color:rgb(75, 72, 72) !important;
+    }
+#wasted .no-padding{
+     padding-left: 0 !important;
+     padding-right: 0 !important;
+}
+

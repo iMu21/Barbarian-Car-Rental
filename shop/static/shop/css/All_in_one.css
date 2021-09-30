@@ -1,0 +1,55 @@
+/* Navigation bar section */
+ .bg-light{
+    background-color: rgb(80, 32, 80) !important;
+}
+ .bg-light a{
+    color:white !important;
+}
+
+
+
+
+/* Carousel Home Section */
+.carousel-item img{
+   height:32rem !important; 
+}
+
+.indicator_clr li{
+    background-color:grey;
+}
+
+.control_clr{
+    background-color:black;
+}
+
+
+/* Carousel Product Section */
+.col-md-3{
+     display:inlline-block !important; 
+     margin-left: -4px;
+     width:.2rem !important;
+}
+.carousel-indicators .active{
+    background-color:blue;
+}
+
+.col-md-3 img{
+    width:100%;
+    height:32rem !important;
+}
+.carousel-indicator li{
+    background-color:blue;
+}
+.carousel-indicators{
+    bottom: 0;
+    }
+ .carousel-control-prev-icon,
+ .carousel-control-next-icon{
+    background-color: blue;
+    }
+ .no-padding{
+     padding-left: 0;
+     padding-right: 0;
+}
+
+ 

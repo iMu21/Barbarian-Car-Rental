@@ -1,0 +1,64 @@
+{% load static %}
+{% load common %}
+<!-- product carousel -->
+<html>
+<link rel="stylesheet" href="{%static 'shop/css/basic_product_carousel.css' %}">
+
+<container id="wasted"  >
+{% for j in product %}
+  <a href="supercategory?val={{j.0}}" style="text-decoration:none"><h1 style="color:teal; margin:2rem;text-align:center;">{{j.0}}</h1></a>
+  <div id="demo{{forloop.counter}}" class="carousel slide" data-ride="carousel">
+    <ul class="carousel-indicators">
+      <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
+
+      {% for i in j.2 %}
+      <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+      {% endfor %}
+
+    </ul>
+
+    <div class="Container carousel-inner no-padding " style="margin-bottom:50px;">
+      <div class="carousel-item aln active carousel_gap"  style="margin-left:5px">
+
+
+        {% for i in j.1|slice:"0:"%}
+        <div class="col-xs-3 col-sm-3 col-md-3" >
+          <div class="card wow" style="width: 16rem;">
+            <img src='/media/{{i.car_image}}' class="card-img-top" alt="...">
+            <div class="card-body">
+              <div style="height:70px;text-align:#d12e58;"><h5 class="card-title">{{i.car_name|slice:":30"}}..</h5></div>
+              <h6 style="text-align:center;color:#174542;">Driver Charge/Hr: {{i.car_driverRate}}</h6>
+              <h6 style="text-align:center;color:#102b0c;">Car Charge/Hr: {{i.car_hourRate}}</h6>
+              <h6 style="text-align:center;color:#174542;">Delivery Charge: {{i.car_deliveryRate}}</h6>
+              <h6 style="text-align:center;color:#102b0c;">Passenger Capacity: {{i.car_capacity}}</h6>
+
+            </div>
+              <a href="productView?val={{i.id}}" target="_blank"  class="btn btn-primary">More...</a>
+          </div>
+        </div>
+        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+      </div>
+      <div class="carousel-item">
+      {% endif %}
+      {% endfor %}
+    </div>
+    </div>
+    <!-- start -->
+
+
+ 
+
+
+  <a class="carousel-control-prev" href="#demo{{forloop.counter}}" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#demo{{forloop.counter}}" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+  </div>
+</div>
+
+{% endfor %}
+</container>
+
+</html>

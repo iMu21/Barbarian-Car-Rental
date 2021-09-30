@@ -1,0 +1,31 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+<link rel="stylesheet" href="{%static 'shop/css/basic_product_carousel.css' %}">
+{% block title %} Search {% endblock %}
+{% block body %}
+{% if empty == 0 %}
+<div class="row">
+{% for i in data %}
+    <div class="col-xs-3 col-sm-3 col-md-3" style="align:center;margin-bottom:120px;margin-top:20" >
+          <div class="card wow" style="width: 16rem;">
+            <img src='/media/{{i.car_image}}' class="card-img-top" alt="...">
+            <div class="card-body">
+              <div style="height:70px;text-align:#d12e58;"><h5 class="card-title">{{i.car_name|slice:":30"}}..</h5></div>
+              <h6 style="text-align:center;color:#174542;">Driver Charge/Hr: {{i.car_driverRate}}</h6>
+              <h6 style="text-align:center;color:#102b0c;">Car Charge/Hr: {{i.car_hourRate}}</h6>
+              <h6 style="text-align:center;color:#174542;">Delivery Charge: {{i.car_deliveryRate}}</h6>
+              <h6 style="text-align:center;color:#102b0c;">Passenger Capacity: {{i.car_capacity}}</h6>
+
+
+            </div>
+              <a href="productView?val={{i.id}}" target="_blank"  class="btn btn-primary">More...</a>
+          </div>
+        </div>
+{% endfor %}
+    </div>
+{% else %}
+<br><br><br><br><br><br><br><br><br>
+<h1 style="color:red;text-align:center">Sorry! The product you are searching for is not available!</h1>
+<br><br><br><br><br><br><br><br><br>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %} {{product.car_name}} {% endblock %}
+{% block body %}
+<h2 style="color:teal;text-align:center;margin-bottom:40px;margin-top:20px;">{{product.car_name}}</h2>
+<div>
+<!-- Grid row -->
+    <div class="row">
+      <!-- Grid column -->
+      <div class="col-md-6 mt-md-0 mt-3">
+        <!-- Content -->
+          <a href="category?val={{product.car_category}}" style="text-decoration:none;"><h5 style="color:brown;text-align:center;">Category: {{product.car_category}}</h5></a>
+          {% if product.car_quantity > 0 %}
+          <h5 style="text-align:center;color:green">Available</h5>
+          {% else %}
+          <h5 style="text-align:center;color:red"> Not available at this moment.</h5>
+          {% endif %}
+          <h6 style="text-align:center;color:#272d6b">Driver Charge/Hr: {{product.car_driverRate}}</h6>
+          <h6 style="text-align:center;color:#272d6b">Car Charge/Hr: {{product.car_hourRate}}</h6>
+          <h6 style="text-align:center;color:#272d6b">Delivery Charge: {{product.car_deliveryRate}}</h6>
+          <h6 style="text-align:center;color:#272d6b">Passenger Capacity: {{product.car_capacity}}</h6>
+
+          <a href="addcart?val={{product.id}}" target="_blank" class="btn btn-primary" style="width:30rem;margin-left:3rem;background-color:brown">Rent</a>
+      </div>
+
+      <!-- Grid column -->
+      <hr class="clearfix w-100 d-md-none pb-3">
+      <!-- Grid column -->
+      <div class="col-md-6 mb-md-0 mb-3">
+        <!-- Links -->
+        <ul class="list-unstyled">
+          <li >
+            <a href="" ><img src='/media/{{product.car_image}}' width="550" height="400"></a>
+          </li>
+        </ul>
+      </div>
+      <!-- Grid column -->
+</div>
+
+{% endblock %}
