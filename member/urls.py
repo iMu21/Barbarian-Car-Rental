@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static 
 from . import views
+from shop.views import search
 
 urlpatterns = [
     path('', views.profile, name='profile'),
@@ -28,5 +29,7 @@ urlpatterns = [
     path('signUpConfirmation', views.signUpConfirmation, name='signUpConfirmation'),
     path('verificationCheck',views.verificationCheck, name='verificationCheck'),
     path('logInAttempt',views.logInAttempt, name='logInAttempt'),
+
+    path("search",search,name="Search"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
