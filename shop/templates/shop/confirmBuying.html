@@ -1,24 +1,90 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} Confirmation {% endblock %}
+{% block title %}Booking Confirmed{% endblock %}
 {% block body %}
-<div class="alert alert-success alert-dismissible fade show" role="alert"style="margin-bottom:0px!important;">
-  <p style="text-align:center;height:.5rem"><strong>Congratulations!Your order have been received.We should contact with you soon with your given mobile number for further confirmations.
-  </strong></p>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div style="background-color:#d9bfab;padding:3rem;">
-<h1 style="text-align:center;color:teal">Rent Order Details</h1>
-<h6 style="text-align:center;color:green">Order No: {{order_no}} </h6>
-<h5 style="text-align:center;color:purple">Car Name: {{prod.car_name}} </h5>
-<h5 style="text-align:center;color:green">Charge/Hr: {{prod.car_hourRate}} </h5>
-  <h5 style="text-align:center;color:purple">Delivery Charge: {{prod.car_deliveryRate}} </h5>
-<h5 style="text-align:center;color:green">Number of cars: {{car_quantity}} </h5>
-<h5 style="text-align:center;color:purple">Total Cost: {{total_cost}} </h5>
-<h5 style="text-align:center;color:green">Customer Name: {{customer_name}} </h5>
-<h5 style="text-align:center;color:purple">Customer Email: {{customer_email}} </h5>
-<h5 style="text-align:center;color:green">Customer Mobile: {{customer_mobile}} </h5>
-</div>
+
+<section class="confirm-section">
+  <div class="container">
+    <div class="confirm-card">
+      <div class="confirm-header">
+        <i class="bi bi-check-circle-fill"></i>
+        <h3>Booking Confirmed!</h3>
+        <p>Booking Number: <strong>{{ booking.booking_number }}</strong></p>
+        <p>We'll contact you shortly on your provided mobile number for further confirmation.</p>
+      </div>
+      <div class="confirm-body">
+        <div class="detail-row">
+          <span class="label">Vehicle</span>
+          <span class="value">{{ booking.car.car_name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="value"><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Customer</span>
+          <span class="value">{{ booking.customer_name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Email</span>
+          <span class="value">{{ booking.customer_email }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Mobile</span>
+          <span class="value">{{ booking.customer_mobile }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Rental Hours</span>
+          <span class="value">{{ booking.rental_hours }} hrs</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Number of Cars</span>
+          <span class="value">{{ booking.car_quantity }}</span>
+        </div>
+        {% if booking.include_driver %}
+        <div class="detail-row">
+          <span class="label">Driver</span>
+          <span class="value">Included</span>
+        </div>
+        {% endif %}
+        <div class="detail-row">
+          <span class="label">Delivery</span>
+          <span class="value">{{ booking.delivery_date }} at {{ booking.delivery_time }}</span>
+        </div>
+        <hr>
+        <div class="detail-row">
+          <span class="label">Subtotal ({{ booking.hourly_rate }} BDT/hr x {{ booking.rental_hours }}h x {{ booking.car_quantity }})</span>
+          <span class="value">{{ booking.subtotal }} BDT</span>
+        </div>
+        {% if booking.include_driver %}
+        <div class="detail-row">
+          <span class="label">Driver Cost ({{ booking.driver_rate }} BDT/hr x {{ booking.rental_hours }}h x {{ booking.car_quantity }})</span>
+          <span class="value">{{ booking.driver_cost }} BDT</span>
+        </div>
+        {% endif %}
+        <div class="detail-row">
+          <span class="label">Delivery Cost ({{ booking.delivery_rate }} BDT x {{ booking.car_quantity }})</span>
+          <span class="value">{{ booking.delivery_cost }} BDT</span>
+        </div>
+        {% if booking.discount_amount > 0 %}
+        <div class="detail-row">
+          <span class="label">Discount{% if booking.coupon %} ({{ booking.coupon.code }}){% endif %}</span>
+          <span class="value text-success">-{{ booking.discount_amount }} BDT</span>
+        </div>
+        {% endif %}
+        <div class="detail-row">
+          <span class="label">Total Cost</span>
+          <span class="value">{{ booking.total_cost }} BDT</span>
+        </div>
+      </div>
+      {% if request.user.is_authenticated %}
+      <div class="text-center pb-3">
+        <a href="{% url 'shop:booking_detail' booking.pk %}" class="btn btn-sm btn-outline-primary">View Booking Details</a>
+        <a href="{% url 'member:dashboard' %}" class="btn btn-sm btn-outline-secondary">Go to Dashboard</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
 {% endblock %}

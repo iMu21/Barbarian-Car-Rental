@@ -3,5 +3,120 @@
 {% block title %} Barbarian Car Rental {% endblock %}
 {% block body %}
 {% include 'shop/basic_home_carousel.html' %}
+
+<!-- How It Works -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h6 class="about-section-label">How It Works</h6>
+      <h2 class="about-section-title">Rent a Vehicle in 3 Easy Steps</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon"><i class="bi bi-search"></i></div>
+          <h5>Choose Your Vehicle</h5>
+          <p>Browse our collection of cars, motorcycles, and bicycles. Filter by category and find the perfect ride.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon"><i class="bi bi-calendar-check"></i></div>
+          <h5>Book & Schedule</h5>
+          <p>Fill in your details, pick your date and time, add a driver if needed, and apply a promo code.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon"><i class="bi bi-truck"></i></div>
+          <h5>Get It Delivered</h5>
+          <p>We deliver the vehicle right to your doorstep. Enjoy your ride and return when you're done!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Vehicles -->
+{% if featured_cars %}
+<section class="featured-section">
+  <div class="container">
+    <div class="section-heading">
+      <h2><i class="bi bi-star-fill me-2 text-accent"></i>Featured Vehicles</h2>
+      <span class="vehicle-count-badge">{{ featured_cars|length }} pick{{ featured_cars|length|pluralize }}</span>
+    </div>
+    <div class="row g-4 mobile-slider">
+      {% for car in featured_cars %}
+      <div class="col-lg-3 col-md-4 col-sm-6 slider-item">
+        <div class="vehicle-card featured-card">
+          <div class="featured-badge"><i class="bi bi-star-fill"></i> Featured</div>
+          <div class="card-img-wrapper">
+            <img src="/media/{{ car.car_image }}" alt="{{ car.car_name }}">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ car.car_name }}</h5>
+            {% if car.featured_tagline %}
+            <p class="featured-tagline">{{ car.featured_tagline }}</p>
+            {% endif %}
+            {% if car.average_rating > 0 %}
+            <div class="card-rating">
+              {% for i in "12345" %}
+                {% if forloop.counter <= car.average_rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="rating-text">{{ car.average_rating }}/5</span>
+            </div>
+            {% endif %}
+            <div class="card-price">
+              <span class="price-amount">{{ car.car_hourRate }} BDT</span>
+              <span class="price-unit">/hour</span>
+            </div>
+            <div class="card-meta">
+              <div class="meta-item">
+                <i class="bi bi-people-fill text-accent"></i> Capacity
+                <span>{{ car.car_capacity }} seats</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-truck text-accent"></i> Delivery
+                <span>{{ car.car_deliveryRate }} BDT</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'shop:product_detail' car.id %}" class="btn-view">
+              View Details <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% include 'shop/basic_product_carousel.html' %}
+
+<!-- CTA Banner -->
+<section class="home-cta">
+  <div class="container text-center">
+    <h2>Can't Find What You're Looking For?</h2>
+    <p>Contact our team and we'll help you find the perfect vehicle for your needs.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="{% url 'shop:contact' %}" class="btn btn-accent btn-lg">
+        <i class="bi bi-telephone me-2"></i>Contact Us
+      </a>
+      <a href="{% url 'shop:about' %}" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-info-circle me-2"></i>Learn More
+      </a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

@@ -1,63 +1,182 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} Contact Us {% endblock %}
+{% block title %}Contact Us{% endblock %}
 {% block body %}
 
-
-<h1 style="text-align:center;color:teal;margin-bottom:25px">Contact Us</h1>
-<div>
-<!-- Grid row -->
-    <div class="row">
-      <!-- Grid column -->
-      <div class="col-md-3 mt-md-0 mt-3">
-        <!-- Content -->
-
-          <h3 style="text-align:center;color:#706607">Dhaka Office </h3>
-          <p style="margin-left:10px;text-align:center;color:#990d0b">
-            Mirpur 1,Dhaka
-            <br>Bangladesh
-            <br>+0823982935
-            <br>barbariancarrental@gmail.com
-          </p>
-          <h3 style="text-align:center;color:#706607"><br>Khulna Office </h3>
-          <p style="margin-left:10px;text-align:center;color:#990d0b">
-            Rupsha, Khulna
-            <br>Bangladesh
-            <br>+0823982936
-            <br>barbariancarrental@gmail.com
-        </p>
-      </div>
-        <div class="col-md-3 mt-md-0 mt-3">
-        <!-- Content -->
-
-          <h3 style="text-align:center;color:#706607">Sylhet Office </h3>
-          <p style="margin-left:10px;text-align:center;color:#990d0b">
-            Madina Market,Sylhet
-            <br>Bangladesh
-            <br>+0823982939
-            <br>mycartsylhet@gmail.com
-          </p>
-          <h3 style="text-align:center;color:#706607"><br>Bagerhat Office </h3>
-          <p style="margin-left:10px;text-align:center;color:#990d0b">
-            Bashabati, Bagerhat
-            <br>Bangladesh
-            <br>+0823982938
-            <br>barbariancarrental@gmail.com
-        </p>
-      </div>
-      <!-- Grid column -->
-      <hr class="clearfix w-100 d-md-none pb-3">
-      <!-- Grid column -->
-      <div class="col-md-6 mb-md-0 mb-3">
-        <!-- Links -->
-        <ul class="list-unstyled">
-          <li >
-            <a href="contact" ><img src="{%static 'shop/img/contactUs.jpg'%}" width="650" height="350"></a>
-          </li>
-        </ul>
-      </div>
-      <!-- Grid column -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-telephone me-2"></i>Contact Us</h1>
+    <p>Get in touch with our team &mdash; we'd love to hear from you.</p>
+  </div>
 </div>
 
+<!-- Quick Contact Methods -->
+<section class="contact-quick">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="contact-method-card">
+          <div class="contact-method-icon">
+            <i class="bi bi-telephone-fill"></i>
+          </div>
+          <h5>Call Us</h5>
+          <p>Our team is available 24/7</p>
+          <a href="tel:+0823982935" class="contact-method-link">+0823982935</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-method-card">
+          <div class="contact-method-icon">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <h5>Email Us</h5>
+          <p>We reply within 24 hours</p>
+          <a href="mailto:barbariancarrental@gmail.com" class="contact-method-link">barbariancarrental@gmail.com</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-method-card">
+          <div class="contact-method-icon">
+            <i class="bi bi-clock-fill"></i>
+          </div>
+          <h5>Working Hours</h5>
+          <p>Sat - Thu: 9AM - 10PM</p>
+          <span class="contact-method-link">Friday: 2PM - 10PM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Form + Info -->
+<section class="contact-main">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <div class="contact-form-card">
+          <h3><i class="bi bi-send me-2"></i>Send Us a Message</h3>
+          <p class="text-muted mb-4">Have a question or feedback? Fill out the form and we'll get back to you.</p>
+          <form>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" placeholder="Your name">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="your@email.com">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" placeholder="+880 1XXX XXXXXX">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Subject</label>
+                <select class="form-select">
+                  <option selected disabled>Select a topic</option>
+                  <option>General Inquiry</option>
+                  <option>Booking Issue</option>
+                  <option>Vehicle Request</option>
+                  <option>Feedback</option>
+                  <option>Partnership</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Message</label>
+                <textarea class="form-control" rows="5" placeholder="Tell us how we can help..."></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-accent btn-lg w-100">
+                  <i class="bi bi-send me-2"></i>Send Message
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="contact-sidebar">
+          <div class="contact-sidebar-img">
+            <img src="{% static 'shop/img/contactUs.jpg' %}" alt="Contact Us">
+          </div>
+          <div class="contact-social">
+            <h5>Follow Us</h5>
+            <div class="social-links">
+              <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Office Locations -->
+<section class="contact-offices">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h6 class="about-section-label">Our Locations</h6>
+      <h2 class="about-section-title">Find Us Across Bangladesh</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="office-card-v2">
+          <div class="office-card-header">
+            <i class="bi bi-geo-alt-fill"></i>
+            <h5>Dhaka</h5>
+            <span class="office-badge">Head Office</span>
+          </div>
+          <ul class="office-info-v2">
+            <li><i class="bi bi-pin-map"></i> Mirpur 1, Dhaka, Bangladesh</li>
+            <li><i class="bi bi-telephone"></i> +0823982935</li>
+            <li><i class="bi bi-envelope"></i> barbariancarrental@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="office-card-v2">
+          <div class="office-card-header">
+            <i class="bi bi-geo-alt-fill"></i>
+            <h5>Khulna</h5>
+          </div>
+          <ul class="office-info-v2">
+            <li><i class="bi bi-pin-map"></i> Rupsha, Khulna, Bangladesh</li>
+            <li><i class="bi bi-telephone"></i> +0823982936</li>
+            <li><i class="bi bi-envelope"></i> barbariancarrental@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="office-card-v2">
+          <div class="office-card-header">
+            <i class="bi bi-geo-alt-fill"></i>
+            <h5>Sylhet</h5>
+          </div>
+          <ul class="office-info-v2">
+            <li><i class="bi bi-pin-map"></i> Madina Market, Sylhet, Bangladesh</li>
+            <li><i class="bi bi-telephone"></i> +0823982939</li>
+            <li><i class="bi bi-envelope"></i> mycartsylhet@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="office-card-v2">
+          <div class="office-card-header">
+            <i class="bi bi-geo-alt-fill"></i>
+            <h5>Bagerhat</h5>
+          </div>
+          <ul class="office-info-v2">
+            <li><i class="bi bi-pin-map"></i> Bashabati, Bagerhat, Bangladesh</li>
+            <li><i class="bi bi-telephone"></i> +0823982938</li>
+            <li><i class="bi bi-envelope"></i> barbariancarrental@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% endblock %}

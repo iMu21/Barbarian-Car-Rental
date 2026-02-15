@@ -1,151 +1,452 @@
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="{%static 'shop/css/basic.css' %}">
-  <title>{% block title %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+  <title>{% block title %}Barbarian Car Rental{% endblock %}</title>
 </head>
 
 <body>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="../home">Barbarian Car Rental</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{% url 'shop:home' %}">
+        <i class="bi bi-car-front-fill me-2"></i>Barbarian Car Rental
+      </a>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="../home">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../about">About Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../contact">Contact Us</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Products Categories
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color:#67a3c2;">
-            {% for i in superCategory %}
-            <a class="dropdown-item" href="supercategory?val={{i.superCategory_name}}">
-              <p style="color:black;">{{i.superCategory_name}}</p>
-            </a>
-            {% endfor %}
-          </div>
-        </li>
+      <!-- Mobile: search + hamburger inline -->
+      <div class="d-flex align-items-center gap-2 d-lg-none">
+        <a class="btn btn-outline-light btn-sm d-lg-none mobile-search-toggle" href="#" aria-label="Search">
+          <i class="bi bi-search"></i>
+        </a>
         {% if request.user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="../member">{{request.user.username}}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../member/logOut">logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="../member/logIn">login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../member/signUp">signup</a>
-        </li>
+        <a class="btn btn-outline-light btn-sm position-relative d-lg-none" href="{% url 'shop:favorite_list' %}">
+          <i class="bi bi-heart-fill"></i>
+          {% if favorites_count %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.55rem">{{ favorites_count }}</span>{% endif %}
+        </a>
         {% endif %}
-      </ul>
+        <button class="navbar-toggler border-0 p-1" type="button" aria-label="Toggle navigation" id="mobileMenuBtn">
+          <i class="bi bi-list" style="font-size:1.5rem;color:#fff"></i>
+        </button>
+      </div>
 
-      <form class="form-inline my-2 my-lg-0" action="search" method="post">
-        {% csrf_token %}
-        <input name="search_key" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+      <!-- Mobile search bar (hidden by default) -->
+      <div class="mobile-search-bar d-lg-none">
+        <form class="position-relative search-wrapper" action="{% url 'shop:search' %}" method="post" autocomplete="off">
+          {% csrf_token %}
+          <div class="input-group">
+            <input id="mobileSearchInput" name="search_key" class="form-control form-control-sm bg-dark text-white border-secondary" type="text" placeholder="Search vehicles..." aria-label="Search">
+            <button class="btn btn-outline-light btn-sm" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+          <div id="mobileSearchSuggestions" class="search-suggestions"></div>
+        </form>
+      </div>
+
+      <!-- Desktop nav (standard collapse) -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'shop:home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'shop:about' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'shop:contact' %}">Contact</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categories
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              {% for i in superCategory %}
+              <li><a class="dropdown-item" href="{% url 'shop:supercategory_detail' i.pk %}">{{i.superCategory_name}}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+        </ul>
+
+        <form class="d-flex position-relative search-wrapper my-2 my-lg-0 me-lg-3 d-none d-lg-flex" action="{% url 'shop:search' %}" method="post" autocomplete="off">
+          {% csrf_token %}
+          <div class="input-group">
+            <input id="navSearchInput" name="search_key" class="form-control form-control-sm bg-dark text-white border-secondary" type="text" placeholder="Search vehicles..." aria-label="Search">
+            <button class="btn btn-outline-light btn-sm" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </form>
+
+        <div class="navbar-actions d-none d-lg-flex">
+          {% if request.user.is_authenticated %}
+          <a class="btn btn-outline-light btn-sm" href="{% url 'member:dashboard' %}" title="Dashboard">
+            <i class="bi bi-speedometer2 me-1"></i><span>Dashboard</span>
+          </a>
+          <a class="btn btn-outline-light btn-sm position-relative" href="{% url 'shop:favorite_list' %}" title="Favorites">
+            <i class="bi bi-heart-fill"></i>
+            {% if favorites_count %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem">{{ favorites_count }}</span>{% endif %}
+          </a>
+          <a class="btn btn-outline-light btn-sm" href="{% url 'member:profile' %}">
+            <i class="bi bi-person-circle me-1"></i><span>{{request.user.username}}</span>
+          </a>
+          <a class="btn btn-sm btn-danger" href="{% url 'member:logout' %}">Logout</a>
+          {% else %}
+          <a class="btn btn-outline-light btn-sm" href="{% url 'member:login' %}">Login</a>
+          <a class="btn btn-accent btn-sm" href="{% url 'member:signup' %}">Sign Up</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </nav>
 
-
-  {% block body %}
-
-
-  {% endblock %}
-
-  <!-- Footer -->
-  <footer class="page-footer font-small blue pt-4" style="background-color:teal;color:black">
-    <!-- Footer Links -->
-    <div class="container-fluid text-center text-md-left">
-      <!-- Grid row -->
-      <div class="row">
-        <!-- Grid column -->
-        <div class="col-md-6 mt-md-0 mt-3">
-          <!-- Content -->
-          <h5 class="text-uppercase">Be Connected With Us</h5>
-          <p style="color:white">Our shop is 24 hours open for services. Although you can be connected with us through social sites.</p>
+  <!-- Mobile Slide-in Drawer -->
+  <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      {% if request.user.is_authenticated %}
+      <div class="drawer-user">
+        <div class="drawer-avatar"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="drawer-username">{{ request.user.username }}</div>
+          <div class="drawer-email">{{ request.user.email }}</div>
         </div>
-        <!-- Grid column -->
-        <hr class="clearfix w-100 d-md-none pb-3">
-        <!-- Grid column -->
-        <div class="col-md-3 mb-md-0 mb-3">
-         
-          <!-- Links -->
-          <ul class="list-unstyled">
-            <li>
-              
-              <a href="https://www.linkedin.com/in/md-imran-khan-b9450b194/" target="_blank"><img
-                  src="{%static 'shop/img/linkedinLogo.png'%}" width="90" height="90"></a> 
-                  <h6>Md Imran Khan</h6>  
-            </li>
-          </ul>
-        </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
-        <div class="col-md-3 mb-md-0 mb-3">
-          <!-- Links -->
-          <ul class="list-unstyled">
-            <li>
-              <a href="https://www.linkedin.com/in/ejaj-khan-10526218b/" target="_blank"><img
-                  src="{%static 'shop/img/linkedinLogo.png'%}" width="90" height="90"></a>
-                  <h6>Ejaj Hossain Khan</h6>
-            </li>
-          </ul>
-
-        </div>
-        <!-- Grid column -->
-       
-
       </div>
-      <!-- Grid row -->
-
+      {% else %}
+      <div class="drawer-brand">
+        <i class="bi bi-car-front-fill me-2"></i>Barbarian Car Rental
+      </div>
+      {% endif %}
+      <button class="drawer-close" id="drawerClose"><i class="bi bi-x-lg"></i></button>
     </div>
-    <!-- Footer Links -->
-
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2021 Copyright:
-      <a href="home" style="color:brown;" target="_blank">barbariancarrental.com</a>
+    <nav class="drawer-nav">
+      <a href="{% url 'shop:home' %}" class="drawer-link"><i class="bi bi-house"></i> Home</a>
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'member:dashboard' %}" class="drawer-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="{% url 'shop:favorite_list' %}" class="drawer-link">
+        <i class="bi bi-heart"></i> Favorites
+        {% if favorites_count %}<span class="drawer-badge">{{ favorites_count }}</span>{% endif %}
+      </a>
+      {% endif %}
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">Categories</div>
+      {% for i in superCategory %}
+      <a href="{% url 'shop:supercategory_detail' i.pk %}" class="drawer-link"><i class="bi bi-tag"></i> {{ i.superCategory_name }}</a>
+      {% endfor %}
+      <div class="drawer-divider"></div>
+      <a href="{% url 'shop:about' %}" class="drawer-link"><i class="bi bi-info-circle"></i> About</a>
+      <a href="{% url 'shop:contact' %}" class="drawer-link"><i class="bi bi-telephone"></i> Contact</a>
+    </nav>
+    <div class="drawer-footer">
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'member:profile' %}" class="btn btn-outline-light btn-sm w-100 mb-2">
+        <i class="bi bi-person-circle me-1"></i>Profile
+      </a>
+      <a href="{% url 'member:logout' %}" class="btn btn-danger btn-sm w-100">
+        <i class="bi bi-box-arrow-right me-1"></i>Logout
+      </a>
+      {% else %}
+      <a href="{% url 'member:login' %}" class="btn btn-outline-light btn-sm w-100 mb-2">Login</a>
+      <a href="{% url 'member:signup' %}" class="btn btn-accent btn-sm w-100">Sign Up</a>
+      {% endif %}
     </div>
-    <!-- Copyright -->
+  </aside>
 
-  </footer>
+  <main>
+    {% block body %}
+    {% endblock %}
+  </main>
+
   <!-- Footer -->
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+  <footer class="site-footer">
+    <div class="container">
+      <!-- Mobile footer (hidden on lg+) -->
+      <div class="d-lg-none footer-mobile">
+        <div class="footer-mobile-brand">
+          <i class="bi bi-car-front-fill"></i>
+          <h5>Barbarian Car Rental</h5>
+          <p>Your trusted 24/7 vehicle rental partner in Bangladesh.</p>
+          <div class="footer-social footer-social-mobile">
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-mobile-links">
+          <div class="footer-mobile-col">
+            <h6 class="footer-heading">Quick Links</h6>
+            <ul class="footer-links">
+              <li><a href="{% url 'shop:home' %}">Home</a></li>
+              <li><a href="{% url 'shop:about' %}">About Us</a></li>
+              <li><a href="{% url 'shop:contact' %}">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-mobile-col">
+            <h6 class="footer-heading">Categories</h6>
+            <ul class="footer-links">
+              {% for i in superCategory %}
+              <li><a href="{% url 'shop:supercategory_detail' i.pk %}">{{ i.superCategory_name }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="footer-mobile-contact">
+          <div class="footer-contact-row">
+            <i class="bi bi-geo-alt-fill"></i><span>Mirpur 1, Dhaka, Bangladesh</span>
+          </div>
+          <div class="footer-contact-row">
+            <i class="bi bi-telephone-fill"></i><span>+0823982935</span>
+          </div>
+          <div class="footer-contact-row">
+            <i class="bi bi-envelope-fill"></i><span>barbariancarrental@gmail.com</span>
+          </div>
+          <div class="footer-contact-row">
+            <i class="bi bi-clock-fill"></i><span>Sat-Thu: 9AM-10PM | Fri: 2PM-10PM</span>
+          </div>
+        </div>
+        <div class="footer-mobile-team">
+          <a href="https://www.linkedin.com/in/md-imran-khan-b9450b194/" target="_blank" class="footer-team-chip">
+            <i class="bi bi-linkedin"></i> Md Imran Khan
+          </a>
+          <a href="https://www.linkedin.com/in/ejaj-khan-10526218b/" target="_blank" class="footer-team-chip">
+            <i class="bi bi-linkedin"></i> Ejaj Hossain Khan
+          </a>
+        </div>
+      </div>
+
+      <!-- Desktop footer (hidden on mobile) -->
+      <div class="row gy-4 d-none d-lg-flex">
+        <div class="col-lg-4">
+          <div class="footer-brand">
+            <h5><i class="bi bi-car-front-fill me-2"></i>Barbarian Car Rental</h5>
+            <p>Your trusted 24/7 vehicle rental partner in Bangladesh. Premium cars, motorcycles, and bicycles at competitive rates.</p>
+            <div class="footer-social">
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4">
+          <h6 class="footer-heading">Quick Links</h6>
+          <ul class="footer-links">
+            <li><a href="{% url 'shop:home' %}">Home</a></li>
+            <li><a href="{% url 'shop:about' %}">About Us</a></li>
+            <li><a href="{% url 'shop:contact' %}">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4">
+          <h6 class="footer-heading">Categories</h6>
+          <ul class="footer-links">
+            {% for i in superCategory %}
+            <li><a href="{% url 'shop:supercategory_detail' i.pk %}">{{ i.superCategory_name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h6 class="footer-heading">Contact Info</h6>
+          <ul class="footer-contact">
+            <li><i class="bi bi-geo-alt-fill"></i> Mirpur 1, Dhaka, Bangladesh</li>
+            <li><i class="bi bi-telephone-fill"></i> +0823982935</li>
+            <li><i class="bi bi-envelope-fill"></i> barbariancarrental@gmail.com</li>
+            <li><i class="bi bi-clock-fill"></i> Sat-Thu: 9AM-10PM | Fri: 2PM-10PM</li>
+          </ul>
+          <h6 class="footer-heading mt-3">Our Team</h6>
+          <div class="footer-team">
+            <a href="https://www.linkedin.com/in/md-imran-khan-b9450b194/" target="_blank" class="footer-team-link">
+              <i class="bi bi-linkedin"></i> Md Imran Khan
+            </a>
+            <a href="https://www.linkedin.com/in/ejaj-khan-10526218b/" target="_blank" class="footer-team-link">
+              <i class="bi bi-linkedin"></i> Ejaj Hossain Khan
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; {% now "Y" %} Barbarian Car Rental. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
+  <script>
+    (function () {
+      /* Search suggestions — attach to all search inputs */
+      function initSearch(input, box) {
+        if (!input || !box) return;
+        var timer = null;
+        input.addEventListener('input', function () {
+          clearTimeout(timer);
+          var q = this.value.trim();
+          if (!q) { box.innerHTML = ''; box.classList.remove('show'); return; }
+          timer = setTimeout(function () {
+            fetch('{% url "shop:search_suggest" %}?q=' + encodeURIComponent(q))
+              .then(function (r) { return r.json(); })
+              .then(function (data) {
+                if (!data.length) { box.innerHTML = ''; box.classList.remove('show'); return; }
+                box.innerHTML = data.map(function (car) {
+                  return '<a href="/product/' + car.id + '/" class="suggest-item">' +
+                    '<img src="' + (car.image || '') + '" alt="' + car.name + '">' +
+                    '<div class="suggest-info">' +
+                    '<span class="suggest-name">' + car.name + '</span>' +
+                    '<span class="suggest-meta">' + car.category + ' &middot; ' + car.rate + ' BDT/hr</span>' +
+                    '</div></a>';
+                }).join('');
+                box.classList.add('show');
+              });
+          }, 1000);
+        });
+      }
+      initSearch(document.getElementById('navSearchInput'), document.getElementById('searchSuggestions'));
+      initSearch(document.getElementById('mobileSearchInput'), document.getElementById('mobileSearchSuggestions'));
+
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.search-wrapper')) {
+          document.querySelectorAll('.search-suggestions').forEach(function (b) {
+            b.innerHTML = ''; b.classList.remove('show');
+          });
+        }
+      });
+
+      /* Mobile drawer */
+      var drawer = document.getElementById('mobileDrawer');
+      var overlay = document.getElementById('drawerOverlay');
+      var menuBtn = document.getElementById('mobileMenuBtn');
+      var closeBtn = document.getElementById('drawerClose');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      if (menuBtn) menuBtn.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+
+      /* Mobile search toggle */
+      var searchToggle = document.querySelector('.mobile-search-toggle');
+      var searchBar = document.querySelector('.mobile-search-bar');
+      if (searchToggle && searchBar) {
+        searchToggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          searchBar.classList.toggle('open');
+          if (searchBar.classList.contains('open')) {
+            searchBar.querySelector('input').focus();
+          }
+        });
+      }
+    })();
+  </script>
+  <script>
+    /* Mobile slider — smooth circular center-focused carousel */
+    (function () {
+      if (!window.matchMedia('(max-width: 768px)').matches) return;
+
+      document.querySelectorAll('.mobile-slider').forEach(function (slider) {
+        var items = Array.from(slider.querySelectorAll('.slider-item'));
+        var n = items.length;
+        if (n < 2) return;
+
+        /* Clone 2 items from each end for seamless circular wrapping
+           Layout: [clone(n-2), clone(n-1), real_0 … real_n-1, clone(0), clone(1)] */
+        var C = 2;
+        for (var i = 0; i < C; i++) {
+          slider.appendChild(items[i].cloneNode(true));
+        }
+        for (var i = n - 1; i >= n - C; i--) {
+          slider.insertBefore(items[i].cloneNode(true), slider.firstChild);
+        }
+
+        var all = Array.from(slider.querySelectorAll('.slider-item'));
+        var pad = (slider.offsetWidth - all[0].offsetWidth) / 2;
+        slider.style.paddingLeft = pad + 'px';
+        slider.style.paddingRight = pad + 'px';
+
+        /* Start at first real item (index C) without animation */
+        slider.scrollLeft = all[C].offsetLeft - pad;
+
+        /* Proportional focus — runs every frame during scroll */
+        function updateFocus() {
+          var center = slider.scrollLeft + slider.offsetWidth / 2;
+          for (var i = 0; i < all.length; i++) {
+            var el = all[i];
+            var itemCenter = el.offsetLeft + el.offsetWidth / 2;
+            var dist = Math.abs(itemCenter - center);
+            var maxDist = el.offsetWidth * 0.75;
+            var t = Math.min(dist / maxDist, 1);          /* 0 = centered, 1 = far away */
+            var scale = 1 - 0.35 * t;                     /* 1.0 → 0.65 */
+            var opacity = 1 - 0.7 * t;                    /* 1.0 → 0.30 */
+            el.style.transform = 'scale(' + scale + ')';
+            el.style.opacity = opacity;
+          }
+        }
+
+        /* Scroll listener with rAF for 60fps updates */
+        var ticking = false;
+        var busy = false;
+        var teleportTimer;
+
+        slider.addEventListener('scroll', function () {
+          /* Smooth focus every frame */
+          if (!ticking) {
+            requestAnimationFrame(function () {
+              updateFocus();
+              ticking = false;
+            });
+            ticking = true;
+          }
+          /* Circular teleport — debounced until scroll settles */
+          if (!busy) {
+            clearTimeout(teleportTimer);
+            teleportTimer = setTimeout(function () {
+              var cx = slider.scrollLeft + slider.offsetWidth / 2;
+              var idx = 0, best = 1e9;
+              for (var i = 0; i < all.length; i++) {
+                var d = Math.abs(all[i].offsetLeft + all[i].offsetWidth / 2 - cx);
+                if (d < best) { best = d; idx = i; }
+              }
+              var jump = -1;
+              if (idx < C) jump = idx + n;
+              else if (idx >= n + C) jump = idx - n;
+              if (jump >= 0) {
+                busy = true;
+                slider.style.scrollBehavior = 'auto';
+                slider.scrollLeft = all[jump].offsetLeft - pad;
+                slider.style.scrollBehavior = '';
+                updateFocus();
+                setTimeout(function () { busy = false; }, 40);
+              }
+            }, 100);
+          }
+        });
+
+        /* Initial paint */
+        updateFocus();
+      });
+    })();
+  </script>
+  {% block extra_js %}{% endblock %}
 </body>
 
 </html>

@@ -28,9 +28,6 @@ def set_var(parser, token):
     return SetVarNode(parts[1], parts[3])
 
 
-from django import template
-
-
 class AssignNode(template.Node):
     def __init__(self, name, value):
         self.name = name
@@ -57,6 +54,4 @@ def do_assign(parser, token):
     value = parser.compile_filter(bits[2])
     return AssignNode(bits[1], value)
 
-
-register = template.Library()
 register.tag('assign', do_assign)

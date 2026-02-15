@@ -1,0 +1,73 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %}My Favorites{% endblock %}
+{% block body %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-heart-fill me-2"></i>My Favorites</h1>
+  </div>
+</div>
+
+<section class="results-section">
+  <div class="container">
+    {% if favorites %}
+    <div class="row g-4">
+      {% for fav in favorites %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="vehicle-card">
+          <div class="card-img-wrapper">
+            <img src="/media/{{ fav.car.car_image }}" alt="{{ fav.car.car_name }}">
+            <form method="post" action="{% url 'shop:favorite_toggle' fav.car.pk %}" class="favorite-overlay-form">
+              {% csrf_token %}
+              <button type="submit" class="btn-favorite active" title="Remove from favorites">
+                <i class="bi bi-heart-fill"></i>
+              </button>
+            </form>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ fav.car.car_name }}</h5>
+            <div class="card-meta">
+              <div class="meta-item">
+                Car/Hr
+                <span>{{ fav.car.car_hourRate }} BDT</span>
+              </div>
+              <div class="meta-item">
+                Capacity
+                <span>{{ fav.car.car_capacity }} seats</span>
+              </div>
+            </div>
+            {% if fav.car.average_rating > 0 %}
+            <div class="card-rating">
+              {% for i in "12345" %}
+                {% if forloop.counter <= fav.car.average_rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="rating-text">{{ fav.car.average_rating }}/5</span>
+            </div>
+            {% endif %}
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'shop:product_detail' fav.car.id %}" class="btn-view">
+              View Details <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="bi bi-heart"></i>
+      <h3>No favorites yet</h3>
+      <p>Browse our vehicles and click the heart icon to save your favorites.</p>
+      <a href="{% url 'shop:home' %}" class="btn btn-accent mt-2">Browse Vehicles</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %}Review — {{ car.car_name }}{% endblock %}
+{% block body %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-star me-2"></i>Write a Review</h1>
+    <p>{{ car.car_name }}</p>
+  </div>
+</div>
+
+<section class="review-form-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="review-form-card">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">Your Rating</label>
+              <div class="star-rating-input">
+                {% for i in "54321" %}
+                <input type="radio" id="star{{ i }}" name="rating_input" value="{{ i }}">
+                <label for="star{{ i }}" title="{{ i }} star{{ i|pluralize }}"><i class="bi bi-star-fill"></i></label>
+                {% endfor %}
+              </div>
+              {{ form.rating }}
+              {% if form.rating.errors %}
+              <div class="text-danger small mt-1">{{ form.rating.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-4">
+              <label for="id_comment" class="form-label fw-bold">Your Review</label>
+              {{ form.comment }}
+              {% if form.comment.errors %}
+              <div class="text-danger small mt-1">{{ form.comment.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-send me-1"></i> Submit Review
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  const radios = document.querySelectorAll('.star-rating-input input[type="radio"]');
+  const hiddenInput = document.getElementById('id_rating');
+
+  radios.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      hiddenInput.value = this.value;
+    });
+  });
+})();
+</script>
+{% endblock %}

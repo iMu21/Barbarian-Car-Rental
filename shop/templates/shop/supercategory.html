@@ -1,74 +1,121 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} {{Name}} {% endblock %}
+{% block title %}{{ Name }}{% endblock %}
 {% block body %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-collection me-2"></i>{{ Name }}</h1>
+    <p>Browse our {{ Name|lower }} collection — {{ total_vehicles }} vehicle{{ total_vehicles|pluralize }} across {{ category_count }} categor{{ category_count|pluralize:"y,ies" }}.</p>
+  </div>
+</div>
+
 {% if empty == 0 %}
-<html>
-<link rel="stylesheet" href="{%static 'shop/css/basic_product_carousel.css' %}">
-<container id="wasted">
-  {% for j in product %}
-  <a href="category?val={{j.0}}" style="text-decoration:none">
-    <h1 style="color:teal; margin:2rem;text-align:center;">{{j.0}}</h1>
-  </a>
-  <div id="demo{{forloop.counter}}" class="carousel slide" data-ride="carousel">
-    <ul class="carousel-indicators">
-      <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
 
-      {% for i in j.2 %}
-      <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+<!-- Category Quick Nav -->
+<section class="category-nav-section">
+  <div class="container">
+    <div class="category-nav">
+      {% for j in product %}
+      <a href="#cat-{{ forloop.counter }}" class="category-chip">
+        <i class="bi bi-tag-fill"></i>
+        {{ j.0 }}
+        <span class="chip-count">{{ j.1|length }}</span>
+      </a>
       {% endfor %}
+    </div>
+  </div>
+</section>
 
-    </ul>
-
-    <div class="Container carousel-inner no-padding " style="margin-bottom:50px;">
-      <div class="carousel-item aln active carousel_gap" style="margin-left:5px">
-
-        {% for i in j.1|slice:"0:"%}
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <div class="card wow" style="width: 16rem;">
-            <img src='/media/{{i.car_image}}' class="card-img-top" alt="...">
-            <div class="card-body">
-              <div style="height:70px;text-align:#d12e58;">
-                <h5 class="card-title">{{i.car_name|slice:":30"}}..</h5>
-              </div>
-              <h6 style="text-align:center;color:#174542;">Driver Charge/Hr: {{i.car_driverRate}}</h6>
-              <h6 style="text-align:center;color:#102b0c;">Car Charge/Hr: {{i.car_hourRate}}</h6>
-              <h6 style="text-align:center;color:#174542;">Delivery Charge: {{i.car_deliveryRate}}</h6>
-              <h6 style="text-align:center;color:#102b0c;">Passenger Capacity: {{i.car_capacity}}</h6>
-
-            </div>
-            <a href="productView?val={{i.id}}" target="_blank" class="btn btn-primary">More...</a>
-          </div>
-        </div>
-        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
-      </div>
-      <div class="carousel-item">
-        {% endif %}
-        {% endfor %}
+{% for j in product %}
+<section class="vehicle-section" id="cat-{{ forloop.counter }}">
+  <div class="container">
+    <div class="section-heading">
+      <h2><i class="bi bi-tag me-2"></i>{{ j.0 }}</h2>
+      <div class="section-heading-right">
+        <span class="vehicle-count-badge">{{ j.1|length }} vehicle{{ j.1|length|pluralize }}</span>
+        <a href="{% url 'shop:category_detail' j.3.pk %}" class="view-all">
+          View All <i class="bi bi-arrow-right"></i>
+        </a>
       </div>
     </div>
-    <!-- start -->
 
-
-
-
-
-    <a class="carousel-control-prev" href="#demo{{forloop.counter}}" data-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </a>
-    <a class="carousel-control-next" href="#demo{{forloop.counter}}" data-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </a>
+    <div class="row g-4">
+      {% for i in j.1 %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="vehicle-card">
+          {% if i.is_featured %}
+          <div class="featured-badge"><i class="bi bi-star-fill"></i> Featured</div>
+          {% endif %}
+          <div class="card-img-wrapper">
+            <img src="/media/{{ i.car_image }}" alt="{{ i.car_name }}">
+            {% if i.car_quantity > 0 %}
+            <span class="availability-chip available"><i class="bi bi-check-circle-fill"></i> Available</span>
+            {% else %}
+            <span class="availability-chip unavailable"><i class="bi bi-x-circle-fill"></i> Unavailable</span>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ i.car_name }}</h5>
+            {% if i.average_rating > 0 %}
+            <div class="card-rating">
+              {% for s in "12345" %}
+                {% if forloop.counter <= i.average_rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="rating-text">{{ i.average_rating }} ({{ i.review_count }})</span>
+            </div>
+            {% endif %}
+            <div class="card-price">
+              <span class="price-amount">{{ i.car_hourRate }} BDT</span>
+              <span class="price-unit">/hour</span>
+            </div>
+            <div class="card-meta">
+              {% if i.car_driverRate %}
+              <div class="meta-item">
+                <i class="bi bi-person-fill text-accent"></i> Driver/Hr
+                <span>{{ i.car_driverRate }} BDT</span>
+              </div>
+              {% endif %}
+              <div class="meta-item">
+                <i class="bi bi-truck text-accent"></i> Delivery
+                <span>{{ i.car_deliveryRate }} BDT</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-people-fill text-accent"></i> Capacity
+                <span>{{ i.car_capacity }} seats</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-box-seam text-accent"></i> Stock
+                <span>{{ i.car_quantity }} units</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'shop:product_detail' i.id %}" class="btn-view">
+              View Details <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
-  </div>
+</section>
+{% endfor %}
 
-  {% endfor %}
-</container>
-
-</html>
 {% else %}
-<br><br><br><br><br><br><br><br><br>
-<h1 style="color:red;text-align:center">Sorry! We don't have any product available in this category!</h1>
-<br><br><br><br><br><br><br><br><br>
+<div class="empty-state">
+  <i class="bi bi-car-front"></i>
+  <h3>No vehicles available</h3>
+  <p>There are no vehicles in this category at the moment.</p>
+  <a href="{% url 'shop:home' %}" class="btn btn-accent mt-3">
+    <i class="bi bi-house me-2"></i>Back to Home
+  </a>
+</div>
 {% endif %}
+
 {% endblock %}

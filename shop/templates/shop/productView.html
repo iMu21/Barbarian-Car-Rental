@@ -1,40 +1,128 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} {{product.car_name}} {% endblock %}
+{% block title %}{{ product.car_name }}{% endblock %}
 {% block body %}
-<h2 style="color:teal;text-align:center;margin-bottom:40px;margin-top:20px;">{{product.car_name}}</h2>
-<div>
-<!-- Grid row -->
-    <div class="row">
-      <!-- Grid column -->
-      <div class="col-md-6 mt-md-0 mt-3">
-        <!-- Content -->
-          <a href="category?val={{product.car_category}}" style="text-decoration:none;"><h5 style="color:brown;text-align:center;">Category: {{product.car_category}}</h5></a>
-          {% if product.car_quantity > 0 %}
-          <h5 style="text-align:center;color:green">Available</h5>
-          {% else %}
-          <h5 style="text-align:center;color:red"> Not available at this moment.</h5>
+
+<section class="product-detail">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+      <div class="col-lg-6">
+        <div class="product-image">
+          <img src="/media/{{ product.car_image }}" alt="{{ product.car_name }}">
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="product-info">
+          <div class="d-flex align-items-start justify-content-between">
+            <h1>{{ product.car_name }}</h1>
+            {% if request.user.is_authenticated %}
+            <form method="post" action="{% url 'shop:favorite_toggle' product.pk %}" class="ms-2">
+              {% csrf_token %}
+              <button type="submit" class="btn-favorite {% if is_favorited %}active{% endif %}" title="{% if is_favorited %}Remove from favorites{% else %}Add to favorites{% endif %}">
+                <i class="bi bi-heart{% if is_favorited %}-fill{% endif %}"></i>
+              </button>
+            </form>
+            {% endif %}
+          </div>
+          <p class="product-category">
+            Category: <a href="{% url 'shop:category_detail' product.car_category.pk %}">{{ product.car_category }}</a>
+          </p>
+
+          {% if avg_rating > 0 %}
+          <div class="product-rating mb-2">
+            {% for i in "12345" %}
+              {% if forloop.counter <= avg_rating %}
+              <i class="bi bi-star-fill star-filled"></i>
+              {% else %}
+              <i class="bi bi-star star-empty"></i>
+              {% endif %}
+            {% endfor %}
+            <span class="rating-text">{{ avg_rating }}/5 ({{ review_count }} review{{ review_count|pluralize }})</span>
+          </div>
           {% endif %}
-          <h6 style="text-align:center;color:#272d6b">Driver Charge/Hr: {{product.car_driverRate}}</h6>
-          <h6 style="text-align:center;color:#272d6b">Car Charge/Hr: {{product.car_hourRate}}</h6>
-          <h6 style="text-align:center;color:#272d6b">Delivery Charge: {{product.car_deliveryRate}}</h6>
-          <h6 style="text-align:center;color:#272d6b">Passenger Capacity: {{product.car_capacity}}</h6>
 
-          <a href="addcart?val={{product.id}}" target="_blank" class="btn btn-primary" style="width:30rem;margin-left:3rem;background-color:brown">Rent</a>
+          {% if product.car_quantity > 0 %}
+          <div class="availability-badge available">
+            <i class="bi bi-check-circle-fill"></i> Available
+          </div>
+          {% else %}
+          <div class="availability-badge unavailable">
+            <i class="bi bi-x-circle-fill"></i> Not Available
+          </div>
+          {% endif %}
+
+          <table class="pricing-table">
+            {% if product.car_driverRate %}
+            <tr>
+              <th><i class="bi bi-person-fill me-1"></i> Driver Charge/Hr</th>
+              <td>{{ product.car_driverRate }} BDT</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <th><i class="bi bi-car-front me-1"></i> Car Charge/Hr</th>
+              <td>{{ product.car_hourRate }} BDT</td>
+            </tr>
+            <tr>
+              <th><i class="bi bi-truck me-1"></i> Delivery Charge</th>
+              <td>{{ product.car_deliveryRate }} BDT</td>
+            </tr>
+            <tr>
+              <th><i class="bi bi-people-fill me-1"></i> Passenger Capacity</th>
+              <td>{{ product.car_capacity }} seats</td>
+            </tr>
+          </table>
+
+          <a href="{% url 'shop:rent_car' product.id %}" class="btn-rent">
+            <i class="bi bi-cart-plus"></i> Rent This Vehicle
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section mt-5">
+      <div class="section-heading">
+        <h2><i class="bi bi-chat-left-text me-2"></i>Reviews</h2>
+        {% if can_review %}
+        <a href="{% url 'shop:review_create' product.pk %}" class="btn btn-accent btn-sm">
+          <i class="bi bi-pencil me-1"></i> Write a Review
+        </a>
+        {% endif %}
       </div>
 
-      <!-- Grid column -->
-      <hr class="clearfix w-100 d-md-none pb-3">
-      <!-- Grid column -->
-      <div class="col-md-6 mb-md-0 mb-3">
-        <!-- Links -->
-        <ul class="list-unstyled">
-          <li >
-            <a href="" ><img src='/media/{{product.car_image}}' width="550" height="400"></a>
-          </li>
-        </ul>
+      {% if reviews %}
+      <div class="reviews-list">
+        {% for review in reviews %}
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author">
+              <div class="review-avatar"><i class="bi bi-person-fill"></i></div>
+              <div>
+                <span class="review-name">{{ review.user.username }}</span>
+                <span class="review-date">{{ review.created_at|date:"M j, Y" }}</span>
+              </div>
+            </div>
+            <div class="review-stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% if review.comment %}
+          <p class="review-comment">{{ review.comment }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
       </div>
-      <!-- Grid column -->
-</div>
+      {% else %}
+      <p class="text-muted">No reviews yet. {% if request.user.is_authenticated and can_review %}Be the first to review!{% endif %}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
 
 {% endblock %}

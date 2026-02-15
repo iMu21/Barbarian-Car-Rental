@@ -1,31 +1,76 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-<link rel="stylesheet" href="{%static 'shop/css/basic_product_carousel.css' %}">
-{% block title %} Search {% endblock %}
+{% block title %}Search{% endblock %}
 {% block body %}
-{% if empty == 0 %}
-<div class="row">
-{% for i in data %}
-    <div class="col-xs-3 col-sm-3 col-md-3" style="align:center;margin-bottom:120px;margin-top:20" >
-          <div class="card wow" style="width: 16rem;">
-            <img src='/media/{{i.car_image}}' class="card-img-top" alt="...">
-            <div class="card-body">
-              <div style="height:70px;text-align:#d12e58;"><h5 class="card-title">{{i.car_name|slice:":30"}}..</h5></div>
-              <h6 style="text-align:center;color:#174542;">Driver Charge/Hr: {{i.car_driverRate}}</h6>
-              <h6 style="text-align:center;color:#102b0c;">Car Charge/Hr: {{i.car_hourRate}}</h6>
-              <h6 style="text-align:center;color:#174542;">Delivery Charge: {{i.car_deliveryRate}}</h6>
-              <h6 style="text-align:center;color:#102b0c;">Passenger Capacity: {{i.car_capacity}}</h6>
 
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-search me-2"></i>Search Results</h1>
+  </div>
+</div>
 
+<section class="results-section">
+  <div class="container">
+    {% if empty == 0 %}
+    <div class="row g-4">
+      {% for i in data %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="vehicle-card">
+          <div class="card-img-wrapper">
+            <img src="/media/{{ i.car_image }}" alt="{{ i.car_name }}">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ i.car_name }}</h5>
+            {% if i.average_rating > 0 %}
+            <div class="card-rating">
+              {% for s in "12345" %}
+                {% if forloop.counter <= i.average_rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="rating-text">{{ i.average_rating }}</span>
             </div>
-              <a href="productView?val={{i.id}}" target="_blank"  class="btn btn-primary">More...</a>
+            {% endif %}
+            <div class="card-meta">
+              {% if i.car_driverRate %}
+              <div class="meta-item">
+                Driver/Hr
+                <span>{{ i.car_driverRate }} BDT</span>
+              </div>
+              {% endif %}
+              <div class="meta-item">
+                Car/Hr
+                <span>{{ i.car_hourRate }} BDT</span>
+              </div>
+              <div class="meta-item">
+                Delivery
+                <span>{{ i.car_deliveryRate }} BDT</span>
+              </div>
+              <div class="meta-item">
+                Capacity
+                <span>{{ i.car_capacity }} seats</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'shop:product_detail' i.id %}" class="btn-view">
+              View Details <i class="bi bi-arrow-right"></i>
+            </a>
           </div>
         </div>
-{% endfor %}
+      </div>
+      {% endfor %}
     </div>
-{% else %}
-<br><br><br><br><br><br><br><br><br>
-<h1 style="color:red;text-align:center">Sorry! The product you are searching for is not available!</h1>
-<br><br><br><br><br><br><br><br><br>
-{% endif %}
+    {% else %}
+    <div class="empty-state">
+      <i class="bi bi-search"></i>
+      <h3>No vehicles found</h3>
+      <p>Try a different search term or browse our categories.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
 {% endblock %}

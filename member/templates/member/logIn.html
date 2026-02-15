@@ -1,0 +1,38 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+
+<div class="auth-section">
+  <div class="auth-card">
+    <h2><i class="bi bi-box-arrow-in-right me-2"></i>Log In</h2>
+    <p class="auth-subtitle">Welcome back! Sign in to your account.</p>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-3">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        {{ form.username }}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="{% url 'member:signup' %}">Sign Up</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

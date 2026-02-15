@@ -1,0 +1,127 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block body %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-person-circle me-2"></i>{{ member.username.username }}</h1>
+    {% if member.about %}
+    <p>{{ member.about }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<section class="profile-section">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <h5 class="mb-0">{{ member.username.username }}</h5>
+          </div>
+          <div class="profile-body">
+            <div class="profile-detail-row">
+              <span class="label">Email</span>
+              <span class="value">{{ member.username.email }}</span>
+            </div>
+            {% if member.memberBirthDate %}
+            <div class="profile-detail-row">
+              <span class="label">Age</span>
+              <span class="value">{{ member.memberAge }}</span>
+            </div>
+            {% endif %}
+          </div>
+          <div class="profile-actions">
+            <a href="{% url 'member:profile_edit' %}" class="btn btn-sm btn-accent">
+              <i class="bi bi-pencil me-1"></i>Edit Profile
+            </a>
+          </div>
+        </div>
+
+        <!-- Websites -->
+        <div class="info-card mt-3">
+          <h5><i class="bi bi-globe"></i> Websites</h5>
+          {% for web in website %}
+          <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+            <div class="d-flex align-items-center gap-2">
+              <img src="/media/{{ web.type.websitelogo }}" style="height: 24px; width: 24px;" alt="{{ web.type.name }}">
+              <a href="{{ web.address }}" class="text-accent text-decoration-none fw-500">{{ web.type.name }}</a>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="{% url 'member:website_edit' web.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'member:website_delete' web.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="text-center mt-3">
+            <a href="{% url 'member:website_add' %}" class="btn btn-sm btn-accent">
+              <i class="bi bi-plus-lg me-1"></i>Add Website
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-8">
+        <!-- Basic Info -->
+        <div class="info-card">
+          <h5><i class="bi bi-person-vcard"></i> Basic Information</h5>
+          {% if member.firstName and member.lastName %}
+          <div class="profile-detail-row">
+            <span class="label">Full Name</span>
+            <span class="value">{{ member.firstName }} {{ member.lastName }}</span>
+          </div>
+          {% endif %}
+          <div class="profile-detail-row">
+            <span class="label">Email</span>
+            <span class="value">{{ member.username.email }}</span>
+          </div>
+          {% if member.memberDivision %}
+          <div class="profile-detail-row">
+            <span class="label">Division</span>
+            <span class="value">{{ member.memberDivision }}</span>
+          </div>
+          {% endif %}
+          {% if member.memberDistrict %}
+          <div class="profile-detail-row">
+            <span class="label">District</span>
+            <span class="value">{{ member.memberDistrict }}</span>
+          </div>
+          {% endif %}
+          {% if member.memberBirthDate %}
+          <div class="profile-detail-row">
+            <span class="label">Date of Birth</span>
+            <span class="value">{{ member.memberBirthDate }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Phone Numbers -->
+        <div class="info-card">
+          <h5><i class="bi bi-telephone"></i> Phone Numbers</h5>
+          {% for phone in memberPhone %}
+          <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+            <span>{{ phone.phoneNumber }}</span>
+            <div class="d-flex gap-2">
+              <a href="{% url 'member:phone_edit' phone.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'member:phone_delete' phone.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="text-center mt-3">
+            <a href="{% url 'member:phone_add' %}" class="btn btn-sm btn-accent">
+              <i class="bi bi-plus-lg me-1"></i>Add Phone
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

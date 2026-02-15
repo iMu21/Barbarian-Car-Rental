@@ -1,69 +1,211 @@
- {% extends 'shop/basic.html' %}
+{% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} Add To Cart {% endblock %}
+{% block title %}Rent — {{ prod.car_name }}{% endblock %}
 {% block body %}
- <h1 style="color:skyblue;text-align:center">{{prod.car_name}}</h1>
- <div>
-<!-- Grid row -->
-    <div class="row">
-      <!-- Grid column -->
-        <div class="col-md-5 mt-md-0 mt-3" style="margin-left:6rem;margin-bottom:3rem">
-            <form action="confirmBuying" method="post">
-                 {% csrf_token %}
-                <div class="form-group row">
-                    <div class="col-sm-10">
-      <input name="car_id" type="hidden" readonly class="form-control-plaintext" id="staticCarId" value="{{id}}">
-    </div>
 
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-cart-plus me-2"></i>Rent {{ prod.car_name }}</h1>
   </div>
-
-
-                <div class="form-group">
-    <label for="exampleInputCustomerName">Customer Name</label>
-    <input type="text" name="customer_name" class="form-control" id="exampleInputCustomerName" placeholder="Enter Customer name">
-  </div>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" name="customer_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-                <div class="form-group">
-    <label for="exampleInputMobile">Mobile Number</label>
-    <input type="text" name="customer_mobile" class="form-control" id="exampleInputMobile" aria-describedby="mobileHelp" placeholder="Enter mobile number">
-    <small id="mobileHelp" class="form-text text-muted">We'll never share your mobile number with anyone else.</small>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputAddress">Address</label>
-    <input type="text" name="customer_address" class="form-control" id="exampleInputAddress" placeholder="Enter Address">
-  </div>
-                <div class="form-group">
-    <label for="exampleTotalRentHour">Total Hour You Want to Rent</label>
-    <input type="number" name="totalRentHour" class="form-control" id="exampleTotalRentHour" placeholder="Enter The Number Of Hour You Want to Rent">
-  </div>
-                <div class="form-group">
-    <label for="exampleTotalRentCar">Total Number of Car You Want to Rent</label>
-    <input type="number" name="totalRentCar" class="form-control" id="exampleTotalRentCar" placeholder="Enter The Number Of Car You Want to Rent">
-  </div>
-                <div class="form-group">
-    <label for="exampleDeliveryDate">Delivery Date</label>
-    <input type="Date" name="delivaryDate" class="form-control" id="exampleDeliveryDate"  >
-  </div>
-                <div class="form-group">
-    <label for="exampleDeliveryTime">Delivery Date & Time</label>
-    <input type="Time" name="delivaryTime" class="form-control" id="exampleDeliveryTime" >
-  </div>
-  <button type="submit" class="btn btn-primary">Confirm Order</button>
-</form>
-        </div>
-      <!-- Grid column -->
-      <hr class="clearfix w-100 d-md-none pb-3">
-      <div class="col-md-6 mb-md-0 mb-3">
-        <ul class="list-unstyled">
-          <li style="margin-top:100px;">
-            <a href="productView?val={{prod.id}}" ><img src="/media/{{prod.car_image}}" width="600" height="450" ></a>
-          </li>
-        </ul>
-      </div>
-      <!-- Grid column -->
 </div>
+
+<section class="rent-form-section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <div class="rent-form-card">
+          <form action="{% url 'shop:confirm_order' %}" method="post">
+            {% csrf_token %}
+            {{ form.car_id }}
+
+            <div class="mb-3">
+              <label for="id_customer_name" class="form-label">Customer Name</label>
+              {{ form.customer_name }}
+            </div>
+            <div class="mb-3">
+              <label for="id_customer_email" class="form-label">Email Address</label>
+              {{ form.customer_email }}
+              <div class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="id_customer_mobile" class="form-label">Mobile Number</label>
+              {{ form.customer_mobile }}
+              <div class="form-text">We'll never share your mobile number with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="id_customer_address" class="form-label">Address</label>
+              {{ form.customer_address }}
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="id_totalRentHour" class="form-label">Rental Hours</label>
+                {{ form.totalRentHour }}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_totalRentCar" class="form-label">Number of Cars</label>
+                {{ form.totalRentCar }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="id_deliveryDate" class="form-label">Delivery Date</label>
+                {{ form.deliveryDate }}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_deliveryTime" class="form-label">Delivery Time</label>
+                {{ form.deliveryTime }}
+              </div>
+            </div>
+
+            {% if prod.car_driverRate %}
+            <div class="mb-3">
+              <div class="form-check">
+                {{ form.include_driver }}
+                <label class="form-check-label" for="id_include_driver">
+                  Include Driver ({{ prod.car_driverRate }} BDT/hr per vehicle)
+                </label>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label for="id_coupon_code" class="form-label">Coupon Code</label>
+              <div class="input-group">
+                {{ form.coupon_code }}
+                <button type="button" class="btn btn-outline-secondary" id="applyCouponBtn">Apply</button>
+              </div>
+              <div id="couponFeedback" class="form-text"></div>
+            </div>
+
+            <div class="cost-preview mb-3">
+              <h6 class="fw-bold mb-2"><i class="bi bi-calculator me-1"></i> Cost Preview</h6>
+              <div class="cost-row">
+                <span>Subtotal (hourly)</span>
+                <span id="previewSubtotal">0 BDT</span>
+              </div>
+              <div class="cost-row" id="previewDriverRow" style="display:none">
+                <span>Driver Cost</span>
+                <span id="previewDriverCost">0 BDT</span>
+              </div>
+              <div class="cost-row">
+                <span>Delivery Cost</span>
+                <span id="previewDeliveryCost">0 BDT</span>
+              </div>
+              <div class="cost-row" id="previewDiscountRow" style="display:none">
+                <span>Discount</span>
+                <span id="previewDiscount" class="text-success">-0 BDT</span>
+              </div>
+              <div class="cost-row cost-total">
+                <span>Total</span>
+                <span id="previewTotal">0 BDT</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+              <i class="bi bi-check-circle me-1"></i> Confirm Order
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="rent-product-image">
+          <a href="{% url 'shop:product_detail' prod.id %}">
+            <img src="/media/{{ prod.car_image }}" alt="{{ prod.car_name }}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  const hourlyRate = {{ prod.car_hourRate }};
+  const driverRate = {{ prod.car_driverRate }};
+  const deliveryRate = {{ prod.car_deliveryRate }};
+
+  const hoursInput = document.getElementById('id_totalRentHour');
+  const qtyInput = document.getElementById('id_totalRentCar');
+  const driverCheck = document.getElementById('id_include_driver');
+  const couponInput = document.getElementById('id_coupon_code');
+  const applyBtn = document.getElementById('applyCouponBtn');
+  const couponFeedback = document.getElementById('couponFeedback');
+
+  let couponData = null;
+
+  function updatePreview() {
+    const hours = parseInt(hoursInput.value) || 0;
+    const qty = parseInt(qtyInput.value) || 0;
+    const includeDriver = driverCheck.checked;
+
+    const subtotal = hourlyRate * hours * qty;
+    const driverCost = includeDriver ? driverRate * hours * qty : 0;
+    const deliveryCost = deliveryRate * qty;
+    const preDiscount = subtotal + driverCost + deliveryCost;
+
+    let discount = 0;
+    if (couponData) {
+      if (preDiscount >= couponData.min_order_amount) {
+        if (couponData.discount_type === 'percentage') {
+          discount = preDiscount * couponData.discount_value / 100;
+          if (couponData.max_discount) discount = Math.min(discount, couponData.max_discount);
+        } else {
+          discount = Math.min(couponData.discount_value, preDiscount);
+        }
+      }
+    }
+
+    const total = preDiscount - discount;
+
+    document.getElementById('previewSubtotal').textContent = subtotal + ' BDT';
+    document.getElementById('previewDriverCost').textContent = driverCost + ' BDT';
+    document.getElementById('previewDriverRow').style.display = includeDriver ? '' : 'none';
+    document.getElementById('previewDeliveryCost').textContent = deliveryCost + ' BDT';
+    document.getElementById('previewDiscount').textContent = '-' + Math.round(discount) + ' BDT';
+    document.getElementById('previewDiscountRow').style.display = discount > 0 ? '' : 'none';
+    document.getElementById('previewTotal').textContent = Math.round(total) + ' BDT';
+  }
+
+  hoursInput.addEventListener('input', updatePreview);
+  qtyInput.addEventListener('input', updatePreview);
+  driverCheck.addEventListener('change', updatePreview);
+
+  applyBtn.addEventListener('click', function() {
+    const code = couponInput.value.trim();
+    if (!code) {
+      couponFeedback.textContent = 'Please enter a coupon code.';
+      couponFeedback.className = 'form-text text-danger';
+      couponData = null;
+      updatePreview();
+      return;
+    }
+    fetch('{% url "shop:validate_coupon" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+      body: JSON.stringify({ code: code }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.valid) {
+        couponData = data;
+        couponFeedback.textContent = data.description || 'Coupon applied!';
+        couponFeedback.className = 'form-text text-success';
+      } else {
+        couponData = null;
+        couponFeedback.textContent = data.error;
+        couponFeedback.className = 'form-text text-danger';
+      }
+      updatePreview();
+    });
+  });
+
+  updatePreview();
+})();
+</script>
 {% endblock %}

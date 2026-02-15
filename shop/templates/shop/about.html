@@ -1,41 +1,177 @@
 {% extends 'shop/basic.html' %}
 {% load static %}
-{% block title %} About Us {% endblock %}
+{% block title %}About Us{% endblock %}
 {% block body %}
 
-<h1 style="text-align:center;color:teal;margin-bottom:25px">About Us</h1>
-<div>
-<!-- Grid row -->
-    <div class="row">
-      <!-- Grid column -->
-      <div class="col-md-6 mt-md-0 mt-3">
-        <!-- Content -->
-        <p style="margin-left:10px;">
-          Barbarian Car Rental does not just rent lifestyle cars, Barbarian Car Rental is here to become a lifestyle!
-          Be it simple, casual or luxurious; trendy, unique or traditional, Barbarian Car Rental presents you a huge number of luxurious cars for rent in cheap rate,
-          occasions, needs and necessities, celebrations, desires and wish lists – Barbarian Car Rental checks it all off.
-          We believe life is not made up of days but each day is a realm of life,
-          where every second is a different color and every color represents Barbarian Car Rental!
-          Our prime focus is the youth, referred colloquially as the “Barbarian Car Rental generation” and we are here to be a part of their lives,
-          not just by renting the brands which rest under their hood but also by writing a part of their daily life stories.
-          Barbarian Car Rental is that little spark of fun springing out of a droning afternoon,
-          that unconscious twist of hair made while losing yourself in thoughts of wonderland,
-          rocking the floor with confidence being no one but yourself or the three sips of tea turning into a moment of
-          a lifetime with the right people and go for a long drive – it is all Barbarian Car Rental.
-        </p>
-      </div>
-      <!-- Grid column -->
-      <hr class="clearfix w-100 d-md-none pb-3">
-      <!-- Grid column -->
-      <div class="col-md-3 mb-md-0 mb-3">
-        <!-- Links -->
-        <ul class="list-unstyled">
-          <li >
-            <a href="about" ><img src="{%static 'shop/img/aboutUs.jpg'%}" width="600" height="400"></a>
-          </li>
-        </ul>
-      </div>
-      <!-- Grid column -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-info-circle me-2"></i>About Us</h1>
+    <p>Learn more about Barbarian Car Rental and our mission.</p>
+  </div>
 </div>
+
+<!-- Stats Counter -->
+<section class="about-stats">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-6 col-md-3">
+        <div class="about-stat-item">
+          <span class="about-stat-number">500+</span>
+          <span class="about-stat-label">Vehicles</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="about-stat-item">
+          <span class="about-stat-number">10K+</span>
+          <span class="about-stat-label">Happy Customers</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="about-stat-item">
+          <span class="about-stat-number">4</span>
+          <span class="about-stat-label">Offices</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="about-stat-item">
+          <span class="about-stat-number">24/7</span>
+          <span class="about-stat-label">Support</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Story -->
+<section class="about-story">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="about-story-content">
+          <h6 class="about-section-label">Our Story</h6>
+          <h2 class="about-section-title">More Than Just a Rental Service</h2>
+          <p class="about-lead">
+            Barbarian Car Rental does not just rent lifestyle cars &mdash; Barbarian Car Rental is here to become a lifestyle!
+          </p>
+          <p>
+            Be it simple, casual or luxurious; trendy, unique or traditional, Barbarian Car Rental presents you a huge number of luxurious cars for rent at affordable rates. For occasions, needs and necessities, celebrations, desires and wish lists &mdash; Barbarian Car Rental checks it all off.
+          </p>
+          <p>
+            We believe life is not made up of days but each day is a realm of life, where every second is a different color and every color represents Barbarian Car Rental!
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="about-img">
+          <img src="{% static 'shop/img/aboutUs.jpg' %}" alt="About Us">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="about-why-us">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h6 class="about-section-label">Why Choose Us</h6>
+      <h2 class="about-section-title">What Makes Us Different</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <h5>Trusted & Safe</h5>
+          <p>All vehicles are regularly serviced and inspected. Your safety is our top priority.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <h5>Best Prices</h5>
+          <p>Competitive hourly rates with no hidden fees. Transparent pricing you can trust.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-car-front"></i>
+          </div>
+          <h5>Wide Selection</h5>
+          <p>From sedans to SUVs, motorcycles to bicycles &mdash; we have the ride for every need.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-headset"></i>
+          </div>
+          <h5>24/7 Support</h5>
+          <p>Round-the-clock customer service to assist you anytime, anywhere in Bangladesh.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="about-mission">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 order-lg-2">
+        <div class="about-story-content">
+          <h6 class="about-section-label">Our Mission</h6>
+          <h2 class="about-section-title">Built for the Barbarian Generation</h2>
+          <p>
+            Our prime focus is the youth, referred colloquially as the "Barbarian Car Rental generation" and we are here to be a part of their lives &mdash; not just by renting the brands which rest under their hood but also by writing a part of their daily life stories.
+          </p>
+          <p>
+            Barbarian Car Rental is that little spark of fun springing out of a droning afternoon &mdash; rocking the floor with confidence being no one but yourself, or the three sips of tea turning into a moment of a lifetime with the right people and go for a long drive. It is all Barbarian Car Rental.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <div class="mission-values">
+          <div class="value-item">
+            <div class="value-icon"><i class="bi bi-heart"></i></div>
+            <div>
+              <h6>Customer First</h6>
+              <p>Every decision is made with our customers' needs in mind.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon"><i class="bi bi-lightning"></i></div>
+            <div>
+              <h6>Quick & Easy</h6>
+              <p>Streamlined booking process from search to delivery.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon"><i class="bi bi-globe"></i></div>
+            <div>
+              <h6>Nationwide Coverage</h6>
+              <p>Serving customers across multiple cities in Bangladesh.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="about-cta">
+  <div class="container text-center">
+    <h2>Ready to Hit the Road?</h2>
+    <p>Browse our collection and find the perfect vehicle for your next adventure.</p>
+    <a href="{% url 'shop:home' %}#vehicles" class="btn btn-accent btn-lg">
+      <i class="bi bi-car-front me-2"></i>Browse Vehicles
+    </a>
+  </div>
+</section>
 
 {% endblock %}

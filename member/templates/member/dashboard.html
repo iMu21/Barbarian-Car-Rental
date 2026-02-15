@@ -1,0 +1,118 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-speedometer2 me-2"></i>Dashboard</h1>
+    <p>Welcome back, {{ request.user.username }}!</p>
+  </div>
+</div>
+
+<section class="dashboard-section">
+  <div class="container">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-receipt"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ booking_count }}</span>
+            <span class="stat-label">Total Bookings</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ total_spent }} BDT</span>
+            <span class="stat-label">Total Spent</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-heart-fill"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ favorites_total }}</span>
+            <span class="stat-label">Favorites</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Bookings -->
+    <div class="dashboard-card mb-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-clock-fill me-2 text-accent"></i>Active Bookings</h5>
+      {% if active_bookings %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Booking #</th>
+              <th>Vehicle</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in active_bookings %}
+            <tr>
+              <td class="fw-semibold">{{ b.booking_number }}</td>
+              <td>{{ b.car.car_name }}</td>
+              <td>{{ b.delivery_date|date:"M j, Y" }}</td>
+              <td><span class="status-badge status-{{ b.status }}">{{ b.get_status_display }}</span></td>
+              <td>{{ b.total_cost }} BDT</td>
+              <td><a href="{% url 'shop:booking_detail' b.pk %}" class="btn btn-sm btn-outline-primary">View</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted mb-0">No active bookings.</p>
+      {% endif %}
+    </div>
+
+    <!-- Past Bookings -->
+    <div class="dashboard-card">
+      <h5 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Past Bookings</h5>
+      {% if past_bookings %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Booking #</th>
+              <th>Vehicle</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in past_bookings %}
+            <tr>
+              <td class="fw-semibold">{{ b.booking_number }}</td>
+              <td>{{ b.car.car_name }}</td>
+              <td>{{ b.delivery_date|date:"M j, Y" }}</td>
+              <td><span class="status-badge status-{{ b.status }}">{{ b.get_status_display }}</span></td>
+              <td>{{ b.total_cost }} BDT</td>
+              <td><a href="{% url 'shop:booking_detail' b.pk %}" class="btn btn-sm btn-outline-secondary">View</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted mb-0">No past bookings yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
