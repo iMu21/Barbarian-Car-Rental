@@ -1207,7 +1207,41 @@ a.contact-method-link:hover {
   color: #fff;
 }
 
-/* ---- Rent / Order Form ---- */
+/* ---- Rent Hero ---- */
+.rent-hero {
+  background: var(--primary);
+  color: #fff;
+  padding: 2rem 0 1.75rem;
+}
+
+.rent-hero h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.rent-hero p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.rent-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+  transition: color var(--transition);
+}
+
+.rent-back:hover {
+  color: var(--accent);
+}
+
+/* ---- Rent Form ---- */
 .rent-form-section {
   padding: 2rem 0 3rem;
 }
@@ -1216,53 +1250,225 @@ a.contact-method-link:hover {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 2rem;
-  box-shadow: var(--shadow);
+  padding: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.rent-form-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rent-form-section-title i {
+  color: var(--accent);
+  font-size: 1.1rem;
 }
 
 .rent-form-card .form-label {
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text);
 }
 
-.rent-form-card .form-control {
+.rent-form-card .form-control,
+.rent-form-card .form-select {
   border-radius: 0.5rem;
   border: 1px solid var(--border);
-  padding: 0.6rem 0.875rem;
+  font-size: 0.9rem;
+  padding: 0.625rem 0.875rem;
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.rent-form-card .form-control:focus {
+.rent-form-card .form-control:focus,
+.rent-form-card .form-select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-light);
 }
 
-.rent-form-card .btn-primary {
-  background: var(--accent);
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.75rem 2rem;
+/* Driver option */
+.rent-driver-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: var(--accent-light);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rent-driver-option input[type="checkbox"] {
+  margin-top: 0.2rem;
+}
+
+.rent-driver-label {
+  display: block;
   font-weight: 600;
-  transition: background var(--transition);
+  font-size: 0.9rem;
+  color: var(--text);
 }
 
-.rent-form-card .btn-primary:hover {
-  background: var(--accent-hover);
+.rent-driver-rate {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
-.rent-product-image {
+/* Coupon */
+.rent-coupon-group .form-control {
+  border-radius: 0.5rem 0 0 0.5rem !important;
+}
+
+.rent-coupon-group .btn {
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+}
+
+/* Submit button */
+.rent-submit-btn {
+  font-weight: 700;
+  padding: 0.875rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius) !important;
+  margin-top: 0.5rem;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.rent-submit-btn:disabled {
+  background: var(--text-light);
+  border-color: var(--text-light);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- Mobile Vehicle Card ---- */
+.rent-vehicle-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rent-vehicle-card img {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.rent-vehicle-info h5 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.rent-vehicle-rate {
+  font-size: 0.9rem;
+  margin-bottom: 0.375rem;
+}
+
+.rent-vehicle-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  padding: 0.15rem 0.5rem;
+  border-radius: 50px;
+  margin-right: 0.25rem;
+}
+
+.rent-vehicle-tag i {
+  font-size: 0.65rem;
+}
+
+/* ---- Rent Sidebar (desktop) ---- */
+.rent-sidebar {
   position: sticky;
   top: 5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
-.rent-product-image img {
+.rent-sidebar-img img {
   width: 100%;
-  height: auto;
+  height: 220px;
   object-fit: cover;
+  display: block;
+}
+
+.rent-sidebar-body {
+  padding: 1.5rem;
+}
+
+.rent-sidebar-body h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.rent-sidebar-rates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 1rem;
+}
+
+.rent-rate-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rent-rate-item > i {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.rent-rate-label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.rent-rate-value {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rent-sidebar-cost {
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.rent-sidebar-cost h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
 }
 
 /* ---- Cost Preview ---- */
@@ -1290,7 +1496,7 @@ a.contact-method-link:hover {
   border-top: 2px solid var(--border);
   margin-top: 0.5rem;
   padding-top: 0.75rem;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--accent);
 }
@@ -2648,9 +2854,50 @@ a.contact-method-link:hover {
     gap: 0.5rem;
   }
 
-  /* Rent Form */
+  /* Rent */
+  .rent-hero {
+    padding: 1.5rem 0 1.25rem;
+  }
+
+  .rent-hero h1 {
+    font-size: 1.25rem;
+  }
+
+  .rent-hero p {
+    font-size: 0.82rem;
+  }
+
+  .rent-form-section {
+    padding: 1.25rem 0 2rem;
+  }
+
   .rent-form-card {
-    padding: 1.25rem;
+    padding: 1.15rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .rent-form-section-title {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .rent-form-card .form-label {
+    font-size: 0.78rem;
+  }
+
+  .rent-form-card .form-control,
+  .rent-form-card .form-select {
+    font-size: 0.85rem;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .rent-driver-option {
+    padding: 0.75rem;
+  }
+
+  .rent-submit-btn {
+    font-size: 0.95rem;
+    padding: 0.75rem;
   }
 
   /* Mobile Slider — center-focused circular */

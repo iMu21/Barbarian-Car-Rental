@@ -3,117 +3,236 @@
 {% block title %}Rent — {{ prod.car_name }}{% endblock %}
 {% block body %}
 
-<div class="page-header">
+<!-- Rent Hero -->
+<div class="rent-hero">
   <div class="container">
-    <h1><i class="bi bi-cart-plus me-2"></i>Rent {{ prod.car_name }}</h1>
+    <a href="{% url 'shop:product_detail' prod.id %}" class="rent-back">
+      <i class="bi bi-arrow-left"></i> Back to {{ prod.car_name }}
+    </a>
+    <h1>Complete Your Booking</h1>
+    <p>Fill in the details below to rent <strong>{{ prod.car_name }}</strong></p>
   </div>
 </div>
 
 <section class="rent-form-section">
   <div class="container">
-    <div class="row g-5">
-      <div class="col-lg-7">
-        <div class="rent-form-card">
-          <form action="{% url 'shop:confirm_order' %}" method="post">
-            {% csrf_token %}
-            {{ form.car_id }}
+    <div class="row g-4 g-lg-5">
 
+      <!-- Left: Form -->
+      <div class="col-lg-7">
+        <form action="{% url 'shop:confirm_order' %}" method="post" id="rentForm">
+          {% csrf_token %}
+          {{ form.car_id }}
+
+          <!-- Vehicle Card (mobile only) -->
+          <div class="rent-vehicle-card d-lg-none">
+            <img src="/media/{{ prod.car_image }}" alt="{{ prod.car_name }}">
+            <div class="rent-vehicle-info">
+              <h5>{{ prod.car_name }}</h5>
+              <div class="rent-vehicle-rate">
+                <span class="text-accent fw-bold">{{ prod.car_hourRate }} BDT</span><span class="text-muted">/hour</span>
+              </div>
+              {% if prod.car_driverRate %}
+              <span class="rent-vehicle-tag"><i class="bi bi-person-fill"></i> Driver {{ prod.car_driverRate }} BDT/hr</span>
+              {% endif %}
+              <span class="rent-vehicle-tag"><i class="bi bi-truck"></i> Delivery {{ prod.car_deliveryRate }} BDT</span>
+            </div>
+          </div>
+
+          <!-- Personal Info -->
+          <div class="rent-form-card">
+            <div class="rent-form-section-title">
+              <i class="bi bi-person"></i> Personal Information
+            </div>
             <div class="mb-3">
-              <label for="id_customer_name" class="form-label">Customer Name</label>
+              <label for="id_customer_name" class="form-label">Full Name</label>
               {{ form.customer_name }}
             </div>
-            <div class="mb-3">
-              <label for="id_customer_email" class="form-label">Email Address</label>
-              {{ form.customer_email }}
-              <div class="form-text">We'll never share your email with anyone else.</div>
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label for="id_customer_email" class="form-label">Email Address</label>
+                {{ form.customer_email }}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_customer_mobile" class="form-label">Mobile Number</label>
+                {{ form.customer_mobile }}
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="id_customer_mobile" class="form-label">Mobile Number</label>
-              {{ form.customer_mobile }}
-              <div class="form-text">We'll never share your mobile number with anyone else.</div>
-            </div>
-            <div class="mb-3">
-              <label for="id_customer_address" class="form-label">Address</label>
+            <div class="mb-0">
+              <label for="id_customer_address" class="form-label">Delivery Address</label>
               {{ form.customer_address }}
             </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
+          </div>
+
+          <!-- Rental Details -->
+          <div class="rent-form-card">
+            <div class="rent-form-section-title">
+              <i class="bi bi-calendar-event"></i> Rental Details
+            </div>
+            <div class="row g-3">
+              <div class="col-6 mb-3">
                 <label for="id_totalRentHour" class="form-label">Rental Hours</label>
                 {{ form.totalRentHour }}
               </div>
-              <div class="col-md-6 mb-3">
-                <label for="id_totalRentCar" class="form-label">Number of Cars</label>
+              <div class="col-6 mb-3">
+                <label for="id_totalRentCar" class="form-label">No. of Vehicles</label>
                 {{ form.totalRentCar }}
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
+              <div class="col-6 mb-3">
                 <label for="id_deliveryDate" class="form-label">Delivery Date</label>
                 {{ form.deliveryDate }}
               </div>
-              <div class="col-md-6 mb-3">
+              <div class="col-6 mb-3">
                 <label for="id_deliveryTime" class="form-label">Delivery Time</label>
                 {{ form.deliveryTime }}
               </div>
             </div>
 
             {% if prod.car_driverRate %}
-            <div class="mb-3">
-              <div class="form-check">
-                {{ form.include_driver }}
-                <label class="form-check-label" for="id_include_driver">
-                  Include Driver ({{ prod.car_driverRate }} BDT/hr per vehicle)
-                </label>
-              </div>
+            <div class="rent-driver-option">
+              {{ form.include_driver }}
+              <label class="form-check-label" for="id_include_driver">
+                <span class="rent-driver-label">Include a Driver</span>
+                <span class="rent-driver-rate">{{ prod.car_driverRate }} BDT/hr per vehicle</span>
+              </label>
             </div>
             {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label for="id_coupon_code" class="form-label">Coupon Code</label>
-              <div class="input-group">
-                {{ form.coupon_code }}
-                <button type="button" class="btn btn-outline-secondary" id="applyCouponBtn">Apply</button>
-              </div>
-              <div id="couponFeedback" class="form-text"></div>
+          <!-- Coupon -->
+          <div class="rent-form-card">
+            <div class="rent-form-section-title">
+              <i class="bi bi-tag"></i> Promo Code
             </div>
+            <div class="input-group rent-coupon-group">
+              {{ form.coupon_code }}
+              <button type="button" class="btn btn-accent" id="applyCouponBtn">
+                Apply
+              </button>
+            </div>
+            <div id="couponFeedback" class="form-text mt-2"></div>
+          </div>
 
-            <div class="cost-preview mb-3">
-              <h6 class="fw-bold mb-2"><i class="bi bi-calculator me-1"></i> Cost Preview</h6>
+          <!-- Cost Preview (mobile — appears inline) -->
+          <div class="rent-form-card d-lg-none">
+            <div class="rent-form-section-title">
+              <i class="bi bi-receipt"></i> Cost Summary
+            </div>
+            <div class="cost-preview">
               <div class="cost-row">
                 <span>Subtotal (hourly)</span>
-                <span id="previewSubtotal">0 BDT</span>
+                <span class="preview-subtotal">0 BDT</span>
               </div>
-              <div class="cost-row" id="previewDriverRow" style="display:none">
+              <div class="cost-row preview-driver-row" style="display:none">
                 <span>Driver Cost</span>
-                <span id="previewDriverCost">0 BDT</span>
+                <span class="preview-driver-cost">0 BDT</span>
               </div>
               <div class="cost-row">
                 <span>Delivery Cost</span>
-                <span id="previewDeliveryCost">0 BDT</span>
+                <span class="preview-delivery-cost">0 BDT</span>
               </div>
-              <div class="cost-row" id="previewDiscountRow" style="display:none">
+              <div class="cost-row preview-discount-row" style="display:none">
                 <span>Discount</span>
-                <span id="previewDiscount" class="text-success">-0 BDT</span>
+                <span class="preview-discount text-success">-0 BDT</span>
               </div>
               <div class="cost-row cost-total">
                 <span>Total</span>
-                <span id="previewTotal">0 BDT</span>
+                <span class="preview-total">0 BDT</span>
               </div>
             </div>
+          </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-2">
-              <i class="bi bi-check-circle me-1"></i> Confirm Order
-            </button>
-          </form>
+          <button type="submit" class="btn btn-accent btn-lg w-100 rent-submit-btn" id="submitBtn" disabled>
+            <i class="bi bi-check-circle me-2"></i>Confirm Booking
+          </button>
+        </form>
+      </div>
+
+      <!-- Right: Sidebar (desktop) -->
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="rent-sidebar">
+          <div class="rent-sidebar-img">
+            <a href="{% url 'shop:product_detail' prod.id %}">
+              <img src="/media/{{ prod.car_image }}" alt="{{ prod.car_name }}">
+            </a>
+          </div>
+          <div class="rent-sidebar-body">
+            <h4>{{ prod.car_name }}</h4>
+            {% if prod.average_rating > 0 %}
+            <div class="card-rating mb-2">
+              {% for i in "12345" %}
+                {% if forloop.counter <= prod.average_rating %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="rating-text">{{ prod.average_rating }}/5</span>
+            </div>
+            {% endif %}
+            <div class="rent-sidebar-rates">
+              <div class="rent-rate-item">
+                <i class="bi bi-speedometer2"></i>
+                <div>
+                  <span class="rent-rate-label">Hourly Rate</span>
+                  <span class="rent-rate-value">{{ prod.car_hourRate }} BDT</span>
+                </div>
+              </div>
+              {% if prod.car_driverRate %}
+              <div class="rent-rate-item">
+                <i class="bi bi-person-fill"></i>
+                <div>
+                  <span class="rent-rate-label">Driver/Hr</span>
+                  <span class="rent-rate-value">{{ prod.car_driverRate }} BDT</span>
+                </div>
+              </div>
+              {% endif %}
+              <div class="rent-rate-item">
+                <i class="bi bi-truck"></i>
+                <div>
+                  <span class="rent-rate-label">Delivery</span>
+                  <span class="rent-rate-value">{{ prod.car_deliveryRate }} BDT</span>
+                </div>
+              </div>
+              <div class="rent-rate-item">
+                <i class="bi bi-people-fill"></i>
+                <div>
+                  <span class="rent-rate-label">Capacity</span>
+                  <span class="rent-rate-value">{{ prod.car_capacity }} seats</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cost Preview (desktop — sticky sidebar) -->
+          <div class="rent-sidebar-cost">
+            <h6><i class="bi bi-receipt me-1"></i> Cost Summary</h6>
+            <div class="cost-preview">
+              <div class="cost-row">
+                <span>Subtotal (hourly)</span>
+                <span class="preview-subtotal">0 BDT</span>
+              </div>
+              <div class="cost-row preview-driver-row" style="display:none">
+                <span>Driver Cost</span>
+                <span class="preview-driver-cost">0 BDT</span>
+              </div>
+              <div class="cost-row">
+                <span>Delivery Cost</span>
+                <span class="preview-delivery-cost">0 BDT</span>
+              </div>
+              <div class="cost-row preview-discount-row" style="display:none">
+                <span>Discount</span>
+                <span class="preview-discount text-success">-0 BDT</span>
+              </div>
+              <div class="cost-row cost-total">
+                <span>Total</span>
+                <span class="preview-total">0 BDT</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-lg-5">
-        <div class="rent-product-image">
-          <a href="{% url 'shop:product_detail' prod.id %}">
-            <img src="/media/{{ prod.car_image }}" alt="{{ prod.car_name }}">
-          </a>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -134,12 +253,30 @@
   const applyBtn = document.getElementById('applyCouponBtn');
   const couponFeedback = document.getElementById('couponFeedback');
 
+  const submitBtn = document.getElementById('submitBtn');
+  const nameInput = document.getElementById('id_customer_name');
+  const emailInput = document.getElementById('id_customer_email');
+  const mobileInput = document.getElementById('id_customer_mobile');
+  const addressInput = document.getElementById('id_customer_address');
+  const dateInput = document.getElementById('id_deliveryDate');
+  const timeInput = document.getElementById('id_deliveryTime');
+
+  const requiredFields = [nameInput, emailInput, mobileInput, addressInput, hoursInput, qtyInput, dateInput, timeInput];
+
+  function checkFormValidity() {
+    const allFilled = requiredFields.every(f => f.value.trim() !== '');
+    submitBtn.disabled = !allFilled;
+  }
+
+  requiredFields.forEach(f => f.addEventListener('input', checkFormValidity));
+  requiredFields.forEach(f => f.addEventListener('change', checkFormValidity));
+
   let couponData = null;
 
   function updatePreview() {
     const hours = parseInt(hoursInput.value) || 0;
     const qty = parseInt(qtyInput.value) || 0;
-    const includeDriver = driverCheck.checked;
+    const includeDriver = driverCheck ? driverCheck.checked : false;
 
     const subtotal = hourlyRate * hours * qty;
     const driverCost = includeDriver ? driverRate * hours * qty : 0;
@@ -160,24 +297,25 @@
 
     const total = preDiscount - discount;
 
-    document.getElementById('previewSubtotal').textContent = subtotal + ' BDT';
-    document.getElementById('previewDriverCost').textContent = driverCost + ' BDT';
-    document.getElementById('previewDriverRow').style.display = includeDriver ? '' : 'none';
-    document.getElementById('previewDeliveryCost').textContent = deliveryCost + ' BDT';
-    document.getElementById('previewDiscount').textContent = '-' + Math.round(discount) + ' BDT';
-    document.getElementById('previewDiscountRow').style.display = discount > 0 ? '' : 'none';
-    document.getElementById('previewTotal').textContent = Math.round(total) + ' BDT';
+    /* Update all cost preview instances (mobile + desktop) */
+    document.querySelectorAll('.preview-subtotal').forEach(el => el.textContent = subtotal + ' BDT');
+    document.querySelectorAll('.preview-driver-cost').forEach(el => el.textContent = driverCost + ' BDT');
+    document.querySelectorAll('.preview-driver-row').forEach(el => el.style.display = includeDriver ? '' : 'none');
+    document.querySelectorAll('.preview-delivery-cost').forEach(el => el.textContent = deliveryCost + ' BDT');
+    document.querySelectorAll('.preview-discount').forEach(el => el.textContent = '-' + Math.round(discount) + ' BDT');
+    document.querySelectorAll('.preview-discount-row').forEach(el => el.style.display = discount > 0 ? '' : 'none');
+    document.querySelectorAll('.preview-total').forEach(el => el.textContent = Math.round(total) + ' BDT');
   }
 
   hoursInput.addEventListener('input', updatePreview);
   qtyInput.addEventListener('input', updatePreview);
-  driverCheck.addEventListener('change', updatePreview);
+  if (driverCheck) driverCheck.addEventListener('change', updatePreview);
 
   applyBtn.addEventListener('click', function() {
     const code = couponInput.value.trim();
     if (!code) {
       couponFeedback.textContent = 'Please enter a coupon code.';
-      couponFeedback.className = 'form-text text-danger';
+      couponFeedback.className = 'form-text text-danger mt-2';
       couponData = null;
       updatePreview();
       return;
@@ -195,11 +333,11 @@
       if (data.valid) {
         couponData = data;
         couponFeedback.textContent = data.description || 'Coupon applied!';
-        couponFeedback.className = 'form-text text-success';
+        couponFeedback.className = 'form-text text-success mt-2';
       } else {
         couponData = null;
         couponFeedback.textContent = data.error;
-        couponFeedback.className = 'form-text text-danger';
+        couponFeedback.className = 'form-text text-danger mt-2';
       }
       updatePreview();
     });
